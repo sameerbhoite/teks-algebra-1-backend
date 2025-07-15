@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: teks-algebra-1-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn teks_algebra_1_backend:app --host 0.0.0.0 --port 8000
+    autoDeploy: true
