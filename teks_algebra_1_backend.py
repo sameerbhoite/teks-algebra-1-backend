@@ -45,36 +45,72 @@ def generate_quiz(topicId: str = Query(..., description="Topic ID from topics.js
         "quiz": quiz
     }
 
-def generate_question(topicId: str, difficulty: str):
-    if topicId == "A.5A":
-        return generate_solve_linear_equation(difficulty)
-    # Add more topics here...
-    return {"question": "No questions available", "answer": None, "difficulty": difficulty}
-
-
-def generate_solve_linear_equation(difficulty: str):
-    import random
-    x = random.randint(1, 10)
-    if difficulty == "easy":
-        a = random.randint(1, 5)
-        b = a * x
-        question = f"{a}x = {b}"
-        answer = x
-    elif difficulty == "medium":
-        a = random.randint(1, 5)
+def generate_question_for_topic(topicId: str, difficulty: str):
+    if topicId == "A.5A":  # Solve Linear Equations
+        a = random.randint(1, 10)
         b = random.randint(1, 10)
+        x = random.randint(1, 10)
         c = a * x + b
         question = f"{a}x + {b} = {c}"
         answer = x
-    else:  # hard
-        a = random.randint(1, 5)
-        b = random.randint(1, 5)
-        c = a * x + random.randint(1, 5)
-        d = b * x + random.randint(1, 5)
-        question = f"{a}x + {c - a * x} = {b}x + {d - b * x}"
-        answer = x
+        return {"question": question, "answer": answer, "difficulty": difficulty}
 
-    return {"question": question, "answer": answer, "difficulty": difficulty}
+    elif topicId == "A.3C":  # Graph Linear Functions
+        m = random.randint(-5, 5)
+        b = random.randint(-5, 5)
+        question = f"What is the slope and y-intercept of the function y = {m}x + {b}?"
+        answer = {"slope": m, "y_intercept": b}
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.5C":  # Solve Systems of Equations
+        x = random.randint(1, 5)
+        y = random.randint(1, 5)
+        a1, b1 = random.randint(1, 5), random.randint(1, 5)
+        a2, b2 = random.randint(1, 5), random.randint(1, 5)
+        c1 = a1 * x + b1 * y
+        c2 = a2 * x + b2 * y
+        eq1 = f"{a1}x + {b1}y = {c1}"
+        eq2 = f"{a2}x + {b2}y = {c2}"
+        question = f"Solve the system:\n1) {eq1}\n2) {eq2}"
+        answer = {"x": x, "y": y}
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.8A":  # Solve Quadratic Equations
+        x1 = random.randint(1, 5)
+        x2 = random.randint(1, 5)
+        question = f"Solve the equation: (x - {x1})(x - {x2}) = 0"
+        answer = sorted([x1, x2])
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.9A":  # Exponential Functions
+        a = random.randint(1, 5)
+        r = random.randint(2, 5)
+        question = f"What is the value of the exponential function f(x) = {a} * {r}^x when x = 2?"
+        answer = a * (r ** 2)
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.10A":  # Add/Subtract Polynomials
+        question = "Simplify: (3x^2 + 2x - 5) + (2x^2 - 3x + 7)"
+        answer = "5x^2 - x + 2"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.11A":  # Simplify Radical Expressions
+        question = "Simplify: √(49)"
+        answer = 7
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.12A":  # Determine Functions
+        question = "Is the relation {(1, 2), (2, 3), (3, 4), (1, 5)} a function?"
+        answer = "No"  # x=1 repeats
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    # fallback
+    return {
+        "question": "No question generator implemented yet for this topic.",
+        "answer": None,
+        "difficulty": difficulty
+    }
+
 
 # For local testing (optional)
 if __name__ == "__main__":
