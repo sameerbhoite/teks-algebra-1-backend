@@ -46,7 +46,6 @@ def generate_quiz(topicId: str = Query(..., description="Topic ID from topics.js
     }
 
 def generate_question (topicId: str, difficulty: str):
-def generate_question_for_topic(topicId: str, difficulty: str):
     if topicId == "A.5A":  # Solve Linear Equations
         if difficulty == 'easy':
             x = random.randint(1, 10)
