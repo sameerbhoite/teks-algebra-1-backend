@@ -46,21 +46,43 @@ def generate_quiz(topicId: str = Query(..., description="Topic ID from topics.js
     }
 
 def generate_question (topicId: str, difficulty: str):
+def generate_question_for_topic(topicId: str, difficulty: str):
     if topicId == "A.5A":  # Solve Linear Equations
-        a = random.randint(1, 10)
-        b = random.randint(1, 10)
-        x = random.randint(1, 10)
-        c = a * x + b
-        question = f"{a}x + {b} = {c}"
-        answer = x
-        return {"question": question, "answer": answer, "difficulty": difficulty}
+        if difficulty == 'easy':
+            x = random.randint(1, 10)
+            a = random.randint(1, 5)
+            b = a * x
+            question = f"Solve: {a}x = {b}"
+            answer = x
+        elif difficulty == 'medium':
+            x = random.randint(1, 10)
+            a = random.randint(1, 5)
+            b = random.randint(1, 5)
+            c = a * x + b
+            question = f"Solve: {a}x + {b} = {c}"
+            answer = x
+        else:
+            a = random.randint(1, 10)
+            b = random.randint(1, 10)
+            x = random.randint(1, 10)
+            c = a * x + b
+            d = a * x
+            question = f"Solve: {a}x + {b} = {d + b}"
+            answer = x
+        return {"question": question, "answer": round(answer, 2), "difficulty": difficulty}
 
     elif topicId == "A.3C":  # Graph Linear Functions
         m = random.randint(-5, 5)
+        b = random.randint(-10, 10)
+        question = f"What is the y-intercept of y = {m}x + {b}?"
+        return {"question": question, "answer": b, "difficulty": difficulty}
+
+    elif topicId == "A.3D":  # Graph Linear Inequalities
+        m = random.randint(-3, 3)
         b = random.randint(-5, 5)
-        question = f"What is the slope and y-intercept of the function y = {m}x + {b}?"
-        answer = {"slope": m, "y_intercept": b}
-        return {"question": question, "answer": answer, "difficulty": difficulty}
+        inequality = random.choice(["<", "<=", ">", ">="])
+        question = f"Graph the inequality: y {inequality} {m}x + {b}. What is the boundary line equation?"
+        return {"question": question, "answer": f"y = {m}x + {b}", "difficulty": difficulty}
 
     elif topicId == "A.5C":  # Solve Systems of Equations
         x = random.randint(1, 5)
@@ -69,40 +91,88 @@ def generate_question (topicId: str, difficulty: str):
         a2, b2 = random.randint(1, 5), random.randint(1, 5)
         c1 = a1 * x + b1 * y
         c2 = a2 * x + b2 * y
-        eq1 = f"{a1}x + {b1}y = {c1}"
-        eq2 = f"{a2}x + {b2}y = {c2}"
-        question = f"Solve the system:\n1) {eq1}\n2) {eq2}"
-        answer = {"x": x, "y": y}
+        question = f"Solve the system:\n{a1}x + {b1}y = {c1}\n{a2}x + {b2}y = {c2}"
+        answer = f"x = {x}, y = {y}"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.7A":  # Factor Quadratics
+        x1 = random.randint(1, 10)
+        x2 = random.randint(1, 10)
+        a = 1
+        b = -(x1 + x2)
+        c = x1 * x2
+        question = f"Factor: x^2 + {b}x + {c}"
+        answer = f"(x - {x1})(x - {x2})"
         return {"question": question, "answer": answer, "difficulty": difficulty}
 
     elif topicId == "A.8A":  # Solve Quadratic Equations
         x1 = random.randint(1, 5)
         x2 = random.randint(1, 5)
-        question = f"Solve the equation: (x - {x1})(x - {x2}) = 0"
-        answer = sorted([x1, x2])
+        question = f"Solve: x^2 - {(x1 + x2)}x + {x1 * x2} = 0"
+        answer = f"x = {x1}, x = {x2}"
         return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.8C":  # Graph Quadratic Functions
+        h = random.randint(-5, 5)
+        k = random.randint(-5, 5)
+        question = f"What is the vertex of the quadratic function y = (x - {h})^2 + {k}?"
+        return {"question": question, "answer": f"({h}, {k})", "difficulty": difficulty}
 
     elif topicId == "A.9A":  # Exponential Functions
-        a = random.randint(1, 5)
-        r = random.randint(2, 5)
-        question = f"What is the value of the exponential function f(x) = {a} * {r}^x when x = 2?"
-        answer = a * (r ** 2)
-        return {"question": question, "answer": answer, "difficulty": difficulty}
+        a = random.randint(1, 3)
+        b = random.randint(2, 5)
+        question = f"Write the exponential function for initial value {a} and growth factor {b}."
+        return {"question": question, "answer": f"y = {a} * {b}^x", "difficulty": difficulty}
+
+    elif topicId == "A.9B":  # Interpret Scatterplots
+        question = "What does a positive correlation in a scatterplot indicate?"
+        return {"question": question, "answer": "As x increases, y increases", "difficulty": difficulty}
 
     elif topicId == "A.10A":  # Add/Subtract Polynomials
-        question = "Simplify: (3x^2 + 2x - 5) + (2x^2 - 3x + 7)"
-        answer = "5x^2 - x + 2"
+        question = "Simplify: (3x^2 + 2x + 1) + (2x^2 - x + 4)"
+        answer = "5x^2 + x + 5"
         return {"question": question, "answer": answer, "difficulty": difficulty}
 
-    elif topicId == "A.11A":  # Simplify Radical Expressions
-        question = "Simplify: √(49)"
-        answer = 7
+    elif topicId == "A.10B":  # Multiply Polynomials
+        question = "Expand: (x + 2)(x + 3)"
+        answer = "x^2 + 5x + 6"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.10C":  # Divide Polynomials
+        question = "Divide: (x^2 + 5x + 6) ÷ (x + 2)"
+        answer = "x + 3"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.10F":  # Difference of Squares
+        question = "Factor: x^2 - 16"
+        answer = "(x - 4)(x + 4)"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.11A":  # Simplify Radicals
+        question = "Simplify: √49"
+        answer = "7"
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.11B":  # Simplify Exponents
+        question = "Simplify: (x^2)^3"
+        answer = "x^6"
         return {"question": question, "answer": answer, "difficulty": difficulty}
 
     elif topicId == "A.12A":  # Determine Functions
-        question = "Is the relation {(1, 2), (2, 3), (3, 4), (1, 5)} a function?"
-        answer = "No"  # x=1 repeats
+        question = "Is the relation {(1,2), (2,3), (3,4)} a function?"
+        answer = "Yes"
         return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    elif topicId == "A.2B":  # Evaluate Expressions
+        a = random.randint(1, 5)
+        b = random.randint(1, 5)
+        question = f"Evaluate: |{a - b}|"
+        answer = abs(a - b)
+        return {"question": question, "answer": answer, "difficulty": difficulty}
+
+    else:
+        return {"question": "Invalid topic selected.", "answer": "", "difficulty": difficulty}
+
 
     # fallback
     return {
