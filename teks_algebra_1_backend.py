@@ -1,59 +1,53 @@
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import random
-import sys
+import json
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this to your frontend domain later
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-def generate_linear_equation(difficulty):
-    a = random.randint(1, 10)
-    b = random.randint(1, 10)
-
-    if difficulty == 'easy':
-        question = f"{a} + {b}"
-        answer = a + b
-    elif difficulty == 'medium':
-        a *= 2
-        b *= 3
-        question = f"{a} - {b}"
-        answer = a - b
-    else:  # hard
-        a *= random.randint(2, 5)
-        b *= random.randint(2, 5)
-        question = f"{a} * {b}"
-        answer = a * b
-
-    return {"question": question, "answer": round(answer, 2), "difficulty": difficulty}
+# Load topics from topics.json
+try:
+    with open("topics.json") as f:
+        topics = json.load(f)
+except FileNotFoundError:
+    topics = []
 
 @app.get("/")
 def home():
-    return {
-        "message": "TEKS Algebra 1 Backend is running. Use /api/generate-weekly-quiz to get a quiz."
-    }
+    return {"message": "TEKS Algebra 1 Backend is running."}
 
-@app.get("/api/generate-weekly-quiz")
-def generate_weekly_quiz():
-    quiz = []
+@app.get("/api/topics")
+def get_topics():
+    return {"topics": topics}
+
+# Dummy quiz generator using topicId
+@app.get("/api/generate-quiz/{topic_id}")
+def generate_quiz(topic_id: str):
+    matching_topics = [t for t in topics if t["id"] == topic_id]
+    if not matching_topics:
+        raise HTTPException(status_code=404, detail="Topic not found")
+
+    # This would be replaced with real question logic per topic
     difficulties = ['easy'] * 10 + ['medium'] * 10 + ['hard'] * 5
     random.shuffle(difficulties)
-
+    
+    quiz = []
     for diff in difficulties:
-        quiz.append(generate_linear_equation(diff))
+        a = random.randint(1, 10)
+        b = random.randint(1, 10)
+        if diff == 'easy':
+            question = f"What is {a} + {b}?"
+            answer = a + b
+        elif diff == 'medium':
+            question = f"What is {a * 2} - {b}?"
+            answer = a * 2 - b
+        else:
+            question = f"What is {a} * {b}?"
+            answer = a * b
+        quiz.append({
+            "question": question,
+            "answer": answer,
+            "difficulty": diff
+        })
 
-    return {"quiz": quiz}
-
-@app.get("/api/python-version")
-def get_python_version():
-    return {"python_version": sys.version}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("teks_algebra_1_backend:app", host="0.0.0.0", port=8000, reload=True)
+    return {"topic": matching_topics[0]["name"], "quiz": quiz}
