@@ -1,53 +1,61 @@
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 import random
 import json
 
 app = FastAPI()
 
-# Load topics from topics.json
-try:
-    with open("topics.json") as f:
-        topics = json.load(f)
-except FileNotFoundError:
-    topics = []
+# Load topics from JSON file
+with open("topics.json") as f:
+    topics = json.load(f)
 
 @app.get("/")
 def home():
-    return {"message": "TEKS Algebra 1 Backend is running."}
+    return {
+        "message": "TEKS Algebra 1 Backend is running. Use /api/topics to get all topics or /api/generate-quiz?topicId=... to get a quiz."
+    }
 
 @app.get("/api/topics")
 def get_topics():
     return {"topics": topics}
 
-# Dummy quiz generator using topicId
-@app.get("/api/generate-quiz/{topic_id}")
-def generate_quiz(topic_id: str):
-    matching_topics = [t for t in topics if t["id"] == topic_id]
-    if not matching_topics:
+@app.get("/api/generate-quiz")
+def generate_quiz(topicId: str = Query(..., description="Topic ID from topics.json")):
+    topic = next((t for t in topics if t["id"] == topicId), None)
+    if not topic:
         raise HTTPException(status_code=404, detail="Topic not found")
 
-    # This would be replaced with real question logic per topic
     difficulties = ['easy'] * 10 + ['medium'] * 10 + ['hard'] * 5
     random.shuffle(difficulties)
-    
-    quiz = []
-    for diff in difficulties:
-        a = random.randint(1, 10)
-        b = random.randint(1, 10)
-        if diff == 'easy':
-            question = f"What is {a} + {b}?"
-            answer = a + b
-        elif diff == 'medium':
-            question = f"What is {a * 2} - {b}?"
-            answer = a * 2 - b
-        else:
-            question = f"What is {a} * {b}?"
-            answer = a * b
-        quiz.append({
-            "question": question,
-            "answer": answer,
-            "difficulty": diff
-        })
+    quiz = [generate_question(topicId, d) for d in difficulties]
 
-    return {"topic": matching_topics[0]["name"], "quiz": quiz}
+    return {
+        "topic": topic,
+        "quiz": quiz
+    }
+
+def generate_question(topicId: str, difficulty: str):
+    # Replace this logic with actual TEKS-aligned question generation for the topicId
+    a = random.randint(1, 10)
+    b = random.randint(1, 10)
+    if difficulty == 'easy':
+        question = f"{a} + {b}"
+        answer = a + b
+    elif difficulty == 'medium':
+        question = f"{a} * {b}"
+        answer = a * b
+    else:
+        question = f"Solve for x: {a}x + {b} = 0"
+        answer = round(-b / a, 2)
+
+    return {
+        "topicId": topicId,
+        "question": question,
+        "answer": answer,
+        "difficulty": difficulty
+    }
+
+# For local testing (optional)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("teks_algebra_1_backend:app", host="0.0.0.0", port=8000, reload=True)
