@@ -46,25 +46,35 @@ def generate_quiz(topicId: str = Query(..., description="Topic ID from topics.js
     }
 
 def generate_question(topicId: str, difficulty: str):
-    # Replace this logic with actual TEKS-aligned question generation for the topicId
-    a = random.randint(1, 10)
-    b = random.randint(1, 10)
-    if difficulty == 'easy':
-        question = f"{a} + {b}"
-        answer = a + b
-    elif difficulty == 'medium':
-        question = f"{a} * {b}"
-        answer = a * b
-    else:
-        question = f"Solve for x: {a}x + {b} = 0"
-        answer = round(-b / a, 2)
+    if topicId == "A.5A":
+        return generate_solve_linear_equation(difficulty)
+    # Add more topics here...
+    return {"question": "No questions available", "answer": None, "difficulty": difficulty}
 
-    return {
-        "topicId": topicId,
-        "question": question,
-        "answer": answer,
-        "difficulty": difficulty
-    }
+
+def generate_solve_linear_equation(difficulty: str):
+    import random
+    x = random.randint(1, 10)
+    if difficulty == "easy":
+        a = random.randint(1, 5)
+        b = a * x
+        question = f"{a}x = {b}"
+        answer = x
+    elif difficulty == "medium":
+        a = random.randint(1, 5)
+        b = random.randint(1, 10)
+        c = a * x + b
+        question = f"{a}x + {b} = {c}"
+        answer = x
+    else:  # hard
+        a = random.randint(1, 5)
+        b = random.randint(1, 5)
+        c = a * x + random.randint(1, 5)
+        d = b * x + random.randint(1, 5)
+        question = f"{a}x + {c - a * x} = {b}x + {d - b * x}"
+        answer = x
+
+    return {"question": question, "answer": answer, "difficulty": difficulty}
 
 # For local testing (optional)
 if __name__ == "__main__":
