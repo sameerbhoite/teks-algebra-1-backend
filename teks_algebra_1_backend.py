@@ -26,6 +26,8 @@ def home():
 
 @app.get("/api/topics")
 def get_topics():
+    with open("topics.json") as f:
+        topics = json.load(f)
     return {"topics": topics}
 
 @app.get("/api/generate-quiz")
