@@ -1,0 +1,19 @@
+[
+  {"id":"A.5A","title":"Solve Linear Equations","description":"Solve linear equations in one variable, including variables on both sides."},
+  {"id":"A.3C","title":"Graph Linear Functions","description":"Graph linear functions and identify intercepts and slope."},
+  {"id":"A.3D","title":"Graph Linear Inequalities","description":"Graph solution sets of linear inequalities in two variables."},
+  {"id":"A.5C","title":"Solve Systems of Equations","description":"Solve systems of two linear equations using graphing, substitution, or elimination."},
+  {"id":"A.7A","title":"Factor Quadratic Expressions","description":"Factor ax^2 + bx + c quadratic expressions."},
+  {"id":"A.8A","title":"Solve Quadratic Equations","description":"Solve quadratic equations by factoring, completing the square, or quadratic formula."},
+  {"id":"A.8C","title":"Graph Quadratic Functions","description":"Identify vertex, intercepts, and transformations of quadratic functions."},
+  {"id":"A.9A","title":"Exponential Functions","description":"Write exponential functions from real-world contexts."},
+  {"id":"A.9B","title":"Interpret Scatterplots","description":"Interpret bivariate data using scatterplots and lines of best fit."},
+  {"id":"A.10A","title":"Add/Subtract Polynomials","description":"Add and subtract polynomials of degree one and two."},
+  {"id":"A.10B","title":"Multiply Polynomials","description":"Multiply polynomials of degree one and two."},
+  {"id":"A.10C","title":"Divide Polynomials","description":"Divide polynomials when divisor is degree one or two."},
+  {"id":"A.10F","title":"Difference of Squares","description":"Recognize and factor difference of squares expressions."},
+  {"id":"A.11A","title":"Simplify Radical Expressions","description":"Simplify numerical radical expressions involving square roots."},
+  {"id":"A.11B","title":"Simplify Exponential Expressions","description":"Simplify expressions using laws of exponents, including rational exponents."},
+  {"id":"A.12A","title":"Determine Functions","description":"Decide whether a relation is a function from different representations."},
+  {"id":"A.2B","title":"Evaluate Algebraic Expressions","description":"Evaluate expressions, including absolute value, with real numbers."}
+]
