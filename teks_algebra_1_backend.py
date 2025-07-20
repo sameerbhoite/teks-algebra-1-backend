@@ -5,6 +5,15 @@ import json
 
 app = FastAPI()
 
+# Allow CORS from Netlify frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can restrict this to your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Load topics from JSON file
 with open("topics.json") as f:
     topics = json.load(f)
